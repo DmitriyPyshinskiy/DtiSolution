@@ -1,12 +1,14 @@
 package ru.pyshinskiy.task5;
 
 import ru.pyshinskiy.entity.Person;
+import static ru.pyshinskiy.util.Utils.excludeRepeatedByLastName;
 
 import java.util.*;
 
 public class Main5 {
+    private static final List<Person> personList = new ArrayList<>();
+
     public static void main(String[] args) {
-        List<Person> personList = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Menu:");
@@ -21,9 +23,10 @@ public class Main5 {
             String action = scanner.nextLine();
             switch (action) {
                 case "Add":
-                    System.out.println("Enter first and last name: ");
-                    String firstName = scanner.nextLine();
-                    String lastName = scanner.nextLine();
+                    System.out.println("Enter first name: ");
+                    String firstName = scanner.next();
+                    System.out.println("Enter last name: ");
+                    String lastName = scanner.next();
                     personList.add(new Person(firstName, lastName));
                     System.out.println("[successfully]");
                     break;
@@ -45,13 +48,5 @@ public class Main5 {
                     break;
             }
         }
-    }
-
-    private static List<Person> excludeRepeatedByLastName(List<Person> personList) {
-        Map<String, String> personMap = new HashMap<>();
-        List<Person> processedPersonList = new ArrayList<>();
-        personList.forEach(person -> personMap.put(person.getLastName(),person.getFirstName()));
-        personMap.forEach((k,v) -> processedPersonList.add(new Person(v, k)));
-        return processedPersonList;
     }
 }

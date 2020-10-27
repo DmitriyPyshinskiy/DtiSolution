@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main4 {
+    private static final List<Person> personList = new ArrayList<>();
+
     public static void main(String[] args) {
-        List<Person> personList = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Menu:");
@@ -20,8 +21,9 @@ public class Main4 {
             System.out.println("Enter you command: ");
             String action = scanner.next();
             if("Add".equalsIgnoreCase(action)) {
-                System.out.println("Enter first and last name: ");
+                System.out.println("Enter first name: ");
                 String firstName = scanner.next();
+                System.out.println("Enter last name: ");
                 String lastName = scanner.next();
                 personList.add(new Person(firstName, lastName));
                 System.out.println("[successfully]");
@@ -37,4 +39,3 @@ public class Main4 {
         }
     }
 }
-

@@ -5,9 +5,9 @@ import ru.pyshinskiy.entity.Person;
 import java.util.*;
 
 public class Main3 {
-    public static void main(String[] args) {
-        List<Person> personList = new ArrayList<>();
+    private static final List<Person> personList = new ArrayList<>();
 
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         while(true) {

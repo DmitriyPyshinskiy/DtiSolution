@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main2 {
-    public static void main(String[] args) {
-        List<Person> personList = new ArrayList<>();
+    private static final List<Person> personList = new ArrayList<>();
 
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         while(true) {

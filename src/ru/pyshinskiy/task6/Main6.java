@@ -2,14 +2,18 @@ package ru.pyshinskiy.task6;
 
 import ru.pyshinskiy.entity.Person;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
+
+import static ru.pyshinskiy.util.Utils.excludeRepeatedByLastName;
+import static ru.pyshinskiy.util.Utils.saveToFile;
 
 public class Main6 {
+    private static final List<Person> personList = new ArrayList<>();
+
     public static void main(String[] args) {
-        List<Person> personList = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Menu:");
@@ -25,9 +29,10 @@ public class Main6 {
             String action = scanner.nextLine();
             switch (action) {
                 case "Add":
-                    System.out.println("Enter first and last name: ");
-                    String firstName = scanner.nextLine();
-                    String lastName = scanner.nextLine();
+                    System.out.println("Enter first name: ");
+                    String firstName = scanner.next();
+                    System.out.println("Enter last name: ");
+                    String lastName = scanner.next();
                     personList.add(new Person(firstName, lastName));
                     System.out.println("[successfully]");
                     break;
@@ -52,30 +57,5 @@ public class Main6 {
                     break;
             }
         }
-    }
-
-    private static List<Person> excludeRepeatedByLastName(List<Person> personList) {
-        Map<String, String> personMap = new HashMap<>();
-        List<Person> processedPersonList = new ArrayList<>();
-        personList.forEach(person -> personMap.put(person.getLastName(),person.getFirstName()));
-        personMap.forEach((k,v) -> processedPersonList.add(new Person(v, k)));
-        return processedPersonList;
-    }
-
-    private static boolean saveToFile(List<Person> personList) {
-        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("person.txt")))
-        {
-            personList.forEach(person -> {
-                try {
-                    oos.writeObject(person);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        catch(Exception ex) {
-            return false;
-        }
-        return true;
     }
 }

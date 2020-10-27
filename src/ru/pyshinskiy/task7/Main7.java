@@ -2,14 +2,18 @@ package ru.pyshinskiy.task7;
 
 import ru.pyshinskiy.entity.Person;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
+
+import static ru.pyshinskiy.util.Utils.excludeRepeatedByLastName;
+import static ru.pyshinskiy.util.Utils.saveToFile;
 
 public class Main7 {
+    private static final List<Person> personList = new ArrayList<>();
+
     public static void main(String[] args) throws Exception {
-        List<Person> personList = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         Menu menu = new Menu(scanner);
 
@@ -45,10 +49,8 @@ public class Main7 {
     }
 
     private static class MenuItem {
-        // Наименование пункта меню
-        private String name;
-        // Доступное действие
-        private Exec exec;
+        private final String name;
+        private final Exec exec;
 
         public MenuItem(String name, Exec exec) {
             this.name = name;
@@ -57,8 +59,8 @@ public class Main7 {
     }
 
     private static class Menu {
-        private List<MenuItem> items = new ArrayList<>();
-        private Scanner scanner;
+        private final List<MenuItem> items = new ArrayList<>();
+        private final Scanner scanner;
 
         public Menu(Scanner scanner) {
             this.scanner = scanner;
@@ -67,24 +69,28 @@ public class Main7 {
 
 
 
-
     private static void completeMenu(Menu menu) {
         menu.items.add(new MenuItem("Add", data -> {
-            System.out.println("Enter first and last name: ");
+            System.out.println("Enter first name: ");
             String firstName = menu.scanner.nextLine();
+            System.out.println("Enter last name: ");
             String lastName = menu.scanner.nextLine();
             data.add(new Person(firstName, lastName));
             System.out.println("[successfully]"); }));
+
         menu.items.add(new MenuItem("Show", data -> {
             if(data.size() == 0) System.out.println("Sorry, person list is empty");
             data.forEach(System.out::println); }));
+
         menu.items.add(new MenuItem("Show sorted unique", data -> {
             if (data.size() == 0) System.out.println("Sorry, person list is empty");
             List<Person> finishedPersonList = excludeRepeatedByLastName(data);
             finishedPersonList.sort(Comparator.comparing(Person::getLastName));
             finishedPersonList.forEach(System.out::println); }));
-        menu.items.add(new MenuItem("Save to file", data -> {
-            System.out.println(saveToFile(data) ? "[successfully saved]" : "[saving failed]");}));
+
+        menu.items.add(new MenuItem("Save to file", data ->
+                System.out.println(saveToFile(data) ? "[successfully saved]" : "[saving failed]")));
+
         menu.items.add(new MenuItem("Exit", data -> { }));
 
     }
@@ -96,30 +102,4 @@ public class Main7 {
         }
         return listMenu.toString();
     }
-
-    private static List<Person> excludeRepeatedByLastName(List<Person> personList) {
-        Map<String, String> personMap = new HashMap<>();
-        List<Person> processedPersonList = new ArrayList<>();
-        personList.forEach(person -> personMap.put(person.getLastName(),person.getFirstName()));
-        personMap.forEach((k,v) -> processedPersonList.add(new Person(v, k)));
-        return processedPersonList;
-    }
-
-    private static boolean saveToFile(List<Person> personList) {
-        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("person.txt")))
-        {
-            personList.forEach(person -> {
-                try {
-                    oos.writeObject(person);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        catch(Exception ex) {
-            return false;
-        }
-        return true;
-    }
-
 }
