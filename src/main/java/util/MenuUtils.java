@@ -1,4 +1,4 @@
-package main.java.util;
+package util;
 
 
 import entity.Person;
@@ -7,19 +7,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MenuUtils {
+    private static final Scanner scanner = new Scanner(System.in);
 
-    public static boolean checkName(String name) {
-        Pattern pattern = Pattern.compile("[a-zA-Z]");
-        Matcher matcher = pattern.matcher(name);
-        return matcher.find();
+    public static boolean checkNameAndSurname(String name, String surname) {
+        Pattern pattern = Pattern.compile("^[a-zA-Zа-яА-ЯёЁ'][a-zA-Z-а-яА-ЯёЁ' ]+[a-zA-Zа-яА-ЯёЁ']?$");
+        Matcher m1 = pattern.matcher(name);
+        Matcher m2 = pattern.matcher(surname);
+        return m1.find() && m2.find();
     }
 
     public static List<Person> excludeRepeatedByLastName(List<Person> personList) {
@@ -30,18 +29,18 @@ public class MenuUtils {
         return processedPersonList;
     }
 
-    public static boolean saveToFile(List<Person> personList) {
+    public static void saveToFile(List<Person> personList) {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("person.txt")))
         {
             oos.writeObject(personList);
         }
         catch(Exception ex) {
-            return false;
+            System.out.println("[saving failed]");
         }
-        return true;
+        System.out.println("[successfully saved]");
     }
 
-    public static List<Person> readFromFile(List<Person> personList) {
+    public static void readFromFile(List<Person> personList) {
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("person.txt")))
         {
             personList.addAll((List<Person>) ois.readObject());
@@ -49,10 +48,14 @@ public class MenuUtils {
         catch(Exception ex){
             System.out.println(ex.getMessage());
         }
-        return personList;
+        System.out.println("[successfully read]");
     }
 
     public static void clearDataInMemory(List<Person> personList) {
         personList.clear();
+        System.out.println("[successfully cleaned]");
+    }
+
+    public static Scanner scanner() { return scanner;
     }
 }

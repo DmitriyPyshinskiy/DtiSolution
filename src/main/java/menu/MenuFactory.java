@@ -1,46 +1,27 @@
 package menu;
 
-import entity.Person;
+import exec.ExecEnum;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
-
-import static main.java.util.MenuUtils.*;
+import static exec.ExecEnum.*;
 
 
 public class MenuFactory {
-    private static final Scanner scanner = new Scanner(System.in);
 
     public static Menu getMenuInstance() {
         return new Menu.MenuBuilder()
-                .withItem(new Menu.MenuItem("Add", data -> {
-                    System.out.println("Enter first name: ");
-                    String firstName = scanner.nextLine();
-                    System.out.println("Enter last name: ");
-                    String lastName = scanner.nextLine();
-                    if(checkName(firstName) && checkName(lastName)) {
-                        data.add(new Person(firstName, lastName));
-                        System.out.println("[successfully]");
-                    } else {
-                        System.out.println("Wrong data. You entered not name or not last name.");
-                    }}))
-                .withItem(new Menu.MenuItem("Show", data -> {
-                    if(data.size() == 0) System.out.println("Sorry, person list is empty");
-                    data.forEach(System.out::println); }))
-                .withItem(new Menu.MenuItem("Show sorted unique", data -> {
-                    if (data.size() == 0) System.out.println("Sorry, person list is empty");
-                    List<Person> finishedPersonList = excludeRepeatedByLastName(data);
-                    finishedPersonList.sort(Comparator.comparing(Person::getLastName));
-                    finishedPersonList.forEach(System.out::println); }))
-                .withItem(new Menu.MenuItem("Save to file", data ->
-                        System.out.println(saveToFile(data) ? "[successfully saved]" : "[saving failed]")))
-                .withItem(new Menu.MenuItem("Exit", data -> { System.out.println("Good bay, my friend!");
-                    System.exit(0); }))
-                .withItem(new Menu.MenuItem("Read from file", data -> { readFromFile(data);
-                    System.out.println("Data was successfully read from file");}))
-                .withItem(new Menu.MenuItem("Clear data in memory", data -> {clearDataInMemory(data);
-                    System.out.println("Data was successfully clean");}))
+                .withItem(new Menu.MenuItem(name(ADD), ADD.getExec()))
+                .withItem(new Menu.MenuItem(name(SHOW), SHOW.getExec()))
+                .withItem(new Menu.MenuItem(name(SHOW_SORTED_UNIQUE), SHOW_SORTED_UNIQUE.getExec()))
+                .withItem(new Menu.MenuItem(name(SAVE_TO_FILE), SAVE_TO_FILE.getExec()))
+                .withItem(new Menu.MenuItem(name(READ_FROM_FILE), READ_FROM_FILE.getExec()))
+                .withItem(new Menu.MenuItem(name(CLEAR_DATA), CLEAR_DATA.getExec()))
+                .withItem(new Menu.MenuItem(name(EXIT), EXIT.getExec()))
                 .build();
+    }
+
+    private static String name(ExecEnum e) {
+        String s = e.name().trim().replace("_", " ");
+        return s.substring(0, 1).concat(s.substring(1).toLowerCase());
+
     }
 }

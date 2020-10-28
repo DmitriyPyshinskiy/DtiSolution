@@ -1,4 +1,4 @@
-package menu;
+package exec;
 
 
 import entity.Person;
