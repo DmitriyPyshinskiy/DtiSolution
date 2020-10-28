@@ -1,6 +1,7 @@
-package ru.pyshinskiy.util;
+package main.java.util;
 
-import ru.pyshinskiy.entity.Person;
+
+import entity.Person;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,8 +11,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class Utils {
+public class MenuUtils {
+
+    public static boolean checkName(String name) {
+        Pattern pattern = Pattern.compile("[a-zA-Z]");
+        Matcher matcher = pattern.matcher(name);
+        return matcher.find();
+    }
 
     public static List<Person> excludeRepeatedByLastName(List<Person> personList) {
         Map<String, String> personMap = new HashMap<>();
@@ -41,5 +50,9 @@ public class Utils {
             System.out.println(ex.getMessage());
         }
         return personList;
+    }
+
+    public static void clearDataInMemory(List<Person> personList) {
+        personList.clear();
     }
 }
